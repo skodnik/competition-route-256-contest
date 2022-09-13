@@ -6,30 +6,43 @@ $stdin = fopen('php://stdin', 'r');
 
 $testCaseCount = quickReadline($stdin);
 
-for ($i = 0; $i < $testCaseCount; $i++) {
-    $requestCount = quickReadline($stdin);
+for ($ic = 0; $ic < $testCaseCount; $ic++) {
+    $sequenceLength = quickReadline($stdin);
     $sequence = explode(' ', quickReadline($stdin));
 
     $set = [];
-    $sequenceCounter = 0;
-    $maxSequence = 0;
+    $correctSequenceCounter = 1;
+    $maxCorrectSequence = 1;
 
-    for ($is = 0; $is < $requestCount; $is++) {
+    for ($is = 0; $is < $sequenceLength; $is++) {
+
         $set[$sequence[$is]] = true;
-        $sequenceCounter++;
 
-        if (count($set) > 2) {
-            $is = $is - $sequenceCounter + 1;
-            $set = [];
-            $sequenceCounter = 0;
+        $in = $is;
+        while ($in < $sequenceLength - 1) {
+
+            $in++;
+            $set[$sequence[$in]] = true;
+
+            if (count($set) > 2) {
+                $set = [];
+                $correctSequenceCounter = 1;
+
+                break;
+            }
+
+            $correctSequenceCounter++;
+
+            if ($correctSequenceCounter > $maxCorrectSequence) {
+                $maxCorrectSequence = $correctSequenceCounter;
+            }
         }
 
-        if ($sequenceCounter > $maxSequence) {
-            $maxSequence = $sequenceCounter;
-        }
+        $set = [];
+        $correctSequenceCounter = 1;
     }
 
-    echo $maxSequence . PHP_EOL;
+    echo $maxCorrectSequence . PHP_EOL;
 }
 
 function quickReadline($stdin): ?string
